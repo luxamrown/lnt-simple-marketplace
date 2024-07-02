@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "819047506407",
+    "project_id": "lnt-simple-marketplace-3fdb7",
+    "storage_bucket": "lnt-simple-marketplace-3fdb7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819047506407:android:9255b19582820f5fbb9d42",
+        "android_client_info": {
+          "package_name": "com.example.lnt_simple_marketplace"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3q2eMYFXrFNNgN8HQlHL3Je2EktvIxBg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
