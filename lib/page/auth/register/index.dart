@@ -75,7 +75,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   handleTapLogin(BuildContext context) {
-    Navigator.push(
+    Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => LoginPage(authService: widget.authService,)));
   }
 
@@ -123,6 +123,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             borderRadius: BorderRadius.circular(28),
                             borderSide: BorderSide(color: Colors.red),
                           ),
+                          labelStyle: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: Color(Colors.grey.shade400.value)),
+                          ),
                           prefixIcon: Icon(Icons.email)),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -152,6 +158,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             borderRadius: BorderRadius.circular(28),
                             borderSide: BorderSide(color: Colors.red),
                           ),
+                          labelStyle: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: Color(Colors.grey.shade400.value)),
+                          ),
                           prefixIcon: Icon(Icons.person)),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -180,6 +192,12 @@ class _RegisterPageState extends State<RegisterPage> {
                           errorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(28),
                             borderSide: BorderSide(color: Colors.red),
+                          ),
+                          labelStyle: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: Color(Colors.grey.shade400.value)),
                           ),
                           prefixIcon: Icon(Icons.smartphone)),
                       validator: (value) {
@@ -211,6 +229,12 @@ class _RegisterPageState extends State<RegisterPage> {
                           errorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(28),
                             borderSide: BorderSide(color: Colors.red),
+                          ),
+                          labelStyle: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: Color(Colors.grey.shade400.value)),
                           ),
                           prefixIcon: Icon(Icons.lock),
                           suffixIcon: IconButton(
@@ -246,6 +270,12 @@ class _RegisterPageState extends State<RegisterPage> {
                           errorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(28),
                             borderSide: BorderSide(color: Colors.red),
+                          ),
+                          labelStyle: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: Color(Colors.grey.shade400.value)),
                           ),
                           prefixIcon: Icon(Icons.lock),
                           suffixIcon: IconButton(

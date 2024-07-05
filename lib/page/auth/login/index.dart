@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lnt_simple_marketplace/page/auth/index.dart';
-import 'package:lnt_simple_marketplace/page/home.dart';
+import 'package:lnt_simple_marketplace/page/index.dart';
 import 'package:lnt_simple_marketplace/service/auth/auth.dart';
 
 class LoginPage extends StatefulWidget {
   final AuthService authService;
-  
-  const LoginPage({ Key? key, required this.authService }): super(key: key);
+
+  const LoginPage({Key? key, required this.authService}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -39,12 +39,12 @@ class _LoginPageState extends State<LoginPage> {
     if (formKeyReg.currentState!.validate()) {
       formKeyReg.currentState!.save();
 
-      var result =
-          await widget.authService.signIn({'email': email, 'password': password});
+      var result = await widget.authService
+          .signIn({'email': email, 'password': password});
 
       if (result != null) {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => HomePage()));
+            .push(MaterialPageRoute(builder: (context) => IndexPage()));
       }
 
       scaffoldMessenger.showSnackBar(SnackBar(
@@ -54,12 +54,11 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _submitLoading = false;
     });
-
   }
 
   handleTapRegister(BuildContext context) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => AuthPage().renderLogin()));
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => AuthPage().renderRegister()));
   }
 
   @override
@@ -106,6 +105,12 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(28),
                             borderSide: BorderSide(color: Colors.red),
                           ),
+                          labelStyle: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: Color(Colors.grey.shade400.value)),
+                          ),
                           prefixIcon: Icon(Icons.email)),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -141,11 +146,17 @@ class _LoginPageState extends State<LoginPage> {
                           suffixIcon: IconButton(
                             icon: Icon(Icons.remove_red_eye),
                             onPressed: onClickRevoke,
+                          ),
+                          labelStyle: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: Color(Colors.grey.shade400.value)),
                           )),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Password is required';
-                        } else if(value.length < 6) {
+                        } else if (value.length < 6) {
                           return 'Password must be at least 6 characters';
                         } else {
                           return null;

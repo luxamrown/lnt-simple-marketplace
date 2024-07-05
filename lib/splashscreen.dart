@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lnt_simple_marketplace/page/auth/index.dart';
+import 'package:lnt_simple_marketplace/page/index.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,7 +18,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => AuthPage().renderRegister())
+        // MaterialPageRoute(builder: (_) => AuthPage().renderLogin())
+        MaterialPageRoute(builder: (_) => IndexPage())
+
       );
     });
   }
