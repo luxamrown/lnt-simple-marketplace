@@ -1,34 +1,43 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lnt_simple_marketplace/constant.dart';
 import 'package:lnt_simple_marketplace/model/product.dart';
 import 'package:lnt_simple_marketplace/service/index.dart';
 
 class ProductService extends FirebaseService {
-  Future<void> addProduct(Product productData) {
-    return productService().add(productData.toMap());
+  Future<DocumentReference?> addProduct(Product productData) async {
+    try {
+       DocumentReference document = await productService().add(productData.toMap());
+
+       return document;
+    } catch (e) {
+      return null;
+    }
   }
 
   Future<void> updateProduct(Product productData) {
     return productService().doc(productData.id).update(productData.toMap());
   }
 
-  Stream<List<Product>> getAllProduct() {
-    return productService().snapshots().map((event) => event.docs.map((e) => Product.fromFireStore(e)).toList());
+  Stream<QuerySnapshot<Map<String, dynamic>>>  getAllProduct() {
+    return productService().snapshots() as Stream<QuerySnapshot<Map<String, dynamic>>>;
+
+    // return FirebaseFirestore.instance.collection("products").snapshots();
+
   }
 
-  Future<Product?> getDetailProduct(String id) async {
-    final selectedProduct = await productService().doc(id).get();
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getDetailProduct(String id) async {
+    final selectedProduct = await productService().doc(id).snapshots();
 
-    if(!selectedProduct.exists){
+    if(await selectedProduct.isEmpty){
       throw Exception("Product Not Found");
     }
 
-    return Product(
-      id: selectedProduct.id,
-      name: selectedProduct[FIELD_NAME],
-      desc: selectedProduct[FIELD_DESC],
-      category: selectedProduct[FIELD_CATEGORY],
-      quantity: selectedProduct[FIELD_QUANTITY],
-      price: selectedProduct[FIELD_PRICE]
-    );
+    return selectedProduct as Stream<QuerySnapshot<Map<String, dynamic>>>;
+  }
+
+
+
+  void deleteProduct(String id) {
+    productService().doc(id).delete();
   }
 }

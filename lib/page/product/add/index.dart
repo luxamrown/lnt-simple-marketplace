@@ -3,10 +3,13 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lnt_simple_marketplace/constant.dart';
 import 'package:lnt_simple_marketplace/model/product.dart';
+import 'package:lnt_simple_marketplace/page/index.dart';
 import 'package:lnt_simple_marketplace/service/product/product.dart';
 
 class AddProductPage extends StatefulWidget {
-  const AddProductPage({super.key});
+  final ProductService productService;
+  
+  const AddProductPage({Key? key, required this.productService}) : super(key: key);
 
   @override
   State<AddProductPage> createState() => _AddProductPageState();
@@ -16,8 +19,8 @@ class _AddProductPageState extends State<AddProductPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
-  final ProductService _productService = ProductService();
 
   String dropdownValue = MasterCategories.first['label']!;
 
@@ -27,6 +30,7 @@ class _AddProductPageState extends State<AddProductPage> {
 
   String name = '';
   String desc = '';
+  String quantity = '';
   String price = '';
 
   void handleSubmit() async {
@@ -38,9 +42,18 @@ class _AddProductPageState extends State<AddProductPage> {
     if (formKeyReg.currentState!.validate()) {
       formKeyReg.currentState!.save();
 
-      final newProduct = Product()
+      final newProduct = Product(
+          name: name, desc: desc, quantity: int.parse(quantity), price: int.parse(price), category: dropdownValue);
 
-      _productService.addProduct()
+      var result = await widget.productService.addProduct(newProduct);
+
+      if (result != null) {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => IndexPage()));
+      }
+
+      scaffoldMessenger.showSnackBar(SnackBar(
+          content: Text(result != null ? "Add Product Success" : "Add Product Failed")));
     }
 
     setState(() {
@@ -221,6 +234,53 @@ class _AddProductPageState extends State<AddProductPage> {
                       },
                     ),
                     SizedBox(
+                      height: 20,
+                    ),
+                    Text("Product Quantity",
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Color(Colors.grey.shade700.value)),
+                        )),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      key: ValueKey('quantity'),
+                      keyboardType: TextInputType.number,
+                      controller: _quantityController,
+                      decoration: InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          labelText: 'Product Quantity',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(28),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(28),
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
+                          labelStyle: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: Color(Colors.grey.shade400.value)),
+                          )),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Quantity is required';
+                        } else {
+                          return null;
+                        }
+                      },
+                      onSaved: (value) {
+                        setState(() {
+                          quantity = value!;
+                        });
+                      },
+                    ),
+                    SizedBox(
                       height: 40,
                     ),
                     Text("Product Category",
@@ -235,7 +295,7 @@ class _AddProductPageState extends State<AddProductPage> {
                       height: 10,
                     ),
                     Center(
-                      child: SizedBox(
+                        child: SizedBox(
                       child: DropdownMenu<String>(
                         initialSelection: MasterCategories.first['label'],
                         onSelected: (String? value) {

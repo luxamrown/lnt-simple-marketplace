@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lnt_simple_marketplace/constant.dart';
+import 'package:lnt_simple_marketplace/page/auth/index.dart';
 import 'package:lnt_simple_marketplace/page/product/add/index.dart';
+import 'package:lnt_simple_marketplace/page/product/index.dart';
 import 'package:lnt_simple_marketplace/widget/category_card.dart';
-import 'package:lnt_simple_marketplace/widget/home.dart';
 class IndexPage extends StatefulWidget {
   const IndexPage({super.key});
 
@@ -18,11 +19,9 @@ class _IndexPageState extends State<IndexPage> {
   int _indexMenu = 0;
        
     final List<Widget> _widgetOptions = <Widget>[
-    const HomeWidget(),
-    const AddProductPage(),
-    Text(
-      'Index 2: School'
-    ),
+    ProductPage().renderListProduct(),
+    ProductPage().renderAddProduct(),
+    AuthPage().renderProfile()
   ];
 
   void _onItemTapped(int index) {
@@ -37,8 +36,8 @@ class _IndexPageState extends State<IndexPage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.grid_view),
+            label: 'Products',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add_circle),

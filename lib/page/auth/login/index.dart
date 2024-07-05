@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (result != null) {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => IndexPage()));
+            .pushReplacement(MaterialPageRoute(builder: (context) => IndexPage()));
       }
 
       scaffoldMessenger.showSnackBar(SnackBar(

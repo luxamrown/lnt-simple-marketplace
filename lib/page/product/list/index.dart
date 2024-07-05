@@ -1,20 +1,34 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lnt_simple_marketplace/constant.dart';
+import 'package:lnt_simple_marketplace/page/product/index.dart';
+import 'package:lnt_simple_marketplace/service/product/product.dart';
 import 'package:lnt_simple_marketplace/widget/category_card.dart';
 import 'package:lnt_simple_marketplace/widget/product_card.dart';
 
-class HomeWidget extends StatefulWidget {
-  const HomeWidget({super.key});
+class ListProduct extends StatefulWidget {
+  final ProductService productService;
+
+  const ListProduct({Key? key, required this.productService}) : super(key: key);
 
   @override
-  State<HomeWidget> createState() => _HomeWidgetState();
+  State<ListProduct> createState() => _ListProductState();
 }
 
-class _HomeWidgetState extends State<HomeWidget> {
+class _ListProductState extends State<ListProduct> {
   final TextEditingController _keywordController = TextEditingController();
+  
+  late Stream<QuerySnapshot<Map<String, dynamic>>> _productStream;
+  
+  @override
+  void initState() {
+    super.initState();
+      _productStream = widget.productService.getAllProduct();
+
+  }
 
   String keyword = '';
   String selectedCategory = "food";
@@ -30,6 +44,10 @@ class _HomeWidgetState extends State<HomeWidget> {
     setState(() {
       selectedCategory = category == selectedCategory ? '' : category;
     });
+  }
+
+  void handleSelectProduct() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductPage().renderDetailProduct()));
   }
 
   @override
@@ -104,8 +122,32 @@ class _HomeWidgetState extends State<HomeWidget> {
             ),
             Column(
               children: [
-            ProductCard(),
+                StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  stream: _productStream,
+                  builder: (context, snapshot) {
+                    if(snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError){
+                      return Text("Error: ${snapshot.error}");
+                    } else {
+                      final data = snapshot.data;
 
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: data!.docs.length,
+                        itemBuilder: (context, index) {
+                          final product = data!.docs[index].data();
+                          final productID = product['id'];
+
+                          return ProductCard(name: product['name'], price: product['price'], onTap: handleSelectProduct);
+
+                        },
+                      );
+
+                    }
+                  },
+                  
+                )
               ],
             )
             

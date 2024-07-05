@@ -7,7 +7,7 @@ class Product {
   String? desc;
   int? quantity;
   int? price;
-  CategoryProduct? category;
+  String? category;
 
   Product({
     this.id,

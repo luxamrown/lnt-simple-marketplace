@@ -1,11 +1,3 @@
-enum CategoryProduct {
-  food,
-  fashion,
-  electronics,
-  furniture,
-  sports,
-}
-
 List<Map<String, String>> MasterCategories = [{
   "label": "Food",
   "code": "food"

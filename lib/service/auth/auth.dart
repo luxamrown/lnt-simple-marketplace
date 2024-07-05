@@ -28,4 +28,18 @@ class AuthService extends FirebaseService {
       return null;
     }
   }
+
+  Future<User> getCurrentUser() async {
+      final User user = await authService().currentUser!;
+
+      return user;
+  }
+
+  Future<void> signOut() async {
+     try {
+       await authService().signOut();
+     } catch (e) {
+       return null;
+     }
+  }
 }

@@ -1,33 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lnt_simple_marketplace/service/auth/auth.dart';
+import 'package:lnt_simple_marketplace/service/product/product.dart';
 
-typedef HandleClickCallBack = Function();
-class ProductCard extends StatelessWidget {
-  final name;
-  final price;
-  final HandleClickCallBack onTap;
+class DetailProductPage extends StatefulWidget {
+  final ProductService productService;
 
-
-  const ProductCard({
-    super.key,
-    required this.name,
-    required this.price,
-    required this.onTap
-  });
+  const DetailProductPage(
+      {Key? key, required this.productService})
+      : super(key: key);
 
   @override
+  State<DetailProductPage> createState() => _DetailProductPageState();
+}
+
+class _DetailProductPageState extends State<DetailProductPage> {
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: onTap,
-        child: Card(
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 40,
+            ),
+            Card(
           shadowColor: Colors.transparent,
-          color: Color(Colors.grey.shade100.value),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              ListTile(
-                title: Text(
-                  name,
+              Text(
+                  "udah pegel",
                   style: GoogleFonts.lato(
                     textStyle: TextStyle(
                         fontSize: 14,
@@ -35,8 +38,8 @@ class ProductCard extends StatelessWidget {
                         color: Color(Colors.grey.shade700.value)),
                   ),
                 ),
-                subtitle: Text(
-                  'Rp ${price}',
+                Text(
+                  'Rp 2000',
                   style: GoogleFonts.lato(
                     textStyle: TextStyle(
                         fontSize: 14,
@@ -44,9 +47,12 @@ class ProductCard extends StatelessWidget {
                         color: Color(Colors.grey.shade700.value)),
                   ),
                   ),
-              ),
             ],
           ),
-        ));
+        )
+          ],
+        ),
+      ),
+    );
   }
 }
