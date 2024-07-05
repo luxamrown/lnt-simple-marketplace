@@ -4,14 +4,14 @@ import 'package:lnt_simple_marketplace/service/index.dart';
 
 class AuthService extends FirebaseService {
   
-  Future<User?> signIn(Profile userData) async {
+  Future<User?> signIn(Map<String, String> userData) async {
     try {
-      UserCredential credential = await authService().signInWithEmailAndPassword(email: userData.email as String, password: userData.password as String);
+      UserCredential credential = await authService().signInWithEmailAndPassword(email: userData['email'] as String, password: userData['password'] as String);
       
       return credential.user;
 
     } catch (e) {
-      rethrow;
+      return null;
     }
   }
 
@@ -25,7 +25,7 @@ class AuthService extends FirebaseService {
       
       return credential.user;
     } catch (e) {
-      rethrow;
+      return null;
     }
   }
 }
