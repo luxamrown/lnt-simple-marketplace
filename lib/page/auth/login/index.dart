@@ -110,6 +110,8 @@ class _LoginPageState extends State<LoginPage> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Email is required';
+                        } else if (!value.contains("@")) {
+                          return 'Invalid Email';
                         } else {
                           return null;
                         }
@@ -143,6 +145,8 @@ class _LoginPageState extends State<LoginPage> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Password is required';
+                        } else if(value.length < 6) {
+                          return 'Password must be at least 6 characters';
                         } else {
                           return null;
                         }
