@@ -1,45 +1,55 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lnt_simple_marketplace/model/profile.dart';
 import 'package:lnt_simple_marketplace/service/index.dart';
 
 class AuthService extends FirebaseService {
-  
+  final String userCollectionConst = "users";
+
   Future<User?> signIn(Map<String, String> userData) async {
     try {
-      UserCredential credential = await authService().signInWithEmailAndPassword(email: userData['email'] as String, password: userData['password'] as String);
+      UserCredential credential = await fireBaseAuthInstance().signInWithEmailAndPassword(email: userData['email'] as String, password: userData['password'] as String);
       
       return credential.user;
 
+    } on FirebaseAuthException catch (e) {
+      throw e;
     } catch (e) {
-      return null;
+      rethrow;
     }
   }
 
   Future<User?> signUp(Profile userData) async {
     try {
-      UserCredential credential = await authService().createUserWithEmailAndPassword(email: userData.email as String, password: userData.password as String);
+      UserCredential credential = await fireBaseAuthInstance().createUserWithEmailAndPassword(email: userData.email as String, password: userData.password as String);
 
       if(credential.user == null) {
         throw Exception("Register Failed");
       }
+
+      String uid = credential.user!.uid;
+
+      DocumentReference userRef = firestoreInstance().collection(userCollectionConst).doc(uid);
+
+      await userRef.set(userData.toMap());
       
       return credential.user;
     } catch (e) {
-      return null;
+      rethrow;
     }
   }
 
   Future<User> getCurrentUser() async {
-      final User user = await authService().currentUser!;
+      final User user = await fireBaseAuthInstance().currentUser!;
 
       return user;
   }
 
   Future<void> signOut() async {
      try {
-       await authService().signOut();
+       await fireBaseAuthInstance().signOut();
      } catch (e) {
-       return null;
+       throw Exception("Sign Out Failed");
      }
   }
 }

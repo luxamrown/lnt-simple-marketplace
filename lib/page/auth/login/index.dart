@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lnt_simple_marketplace/page/auth/index.dart';
@@ -31,26 +32,33 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void handleSubmit() async {
+    late String scaffoldMessage = "";
+
     setState(() {
       _submitLoading = true;
     });
+    
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     if (formKeyReg.currentState!.validate()) {
       formKeyReg.currentState!.save();
+      
+      try {
+        await widget.authService.signIn({'email': email, 'password': password});
+        
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => IndexPage()));
 
-      var result = await widget.authService
-          .signIn({'email': email, 'password': password});
-
-      if (result != null) {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) => IndexPage()));
+        scaffoldMessage = "Sign In Success";
+      } on FirebaseAuthException catch (e) {
+        scaffoldMessage = "Wrong Username or Password";
+      } catch (e) {
+        scaffoldMessage = "Sign In Failed";
       }
-
-      scaffoldMessenger.showSnackBar(SnackBar(
-          content: Text(result != null ? "Login Success" : "Login Failed")));
     }
 
+    if(scaffoldMessage.isNotEmpty){
+      scaffoldMessenger.showSnackBar(SnackBar(content: Text(scaffoldMessage)));
+    } 
     setState(() {
       _submitLoading = false;
     });
@@ -76,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Image.asset("assets/Login-bro.png")),
               Container(
                 width: double.maxFinite,
-                child: Text("Login",
+                child: Text("Sign In",
                     textAlign: TextAlign.left,
                     style: GoogleFonts.lato(
                       textStyle: TextStyle(
@@ -202,7 +210,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: ElevatedButton(
                           onPressed: _submitLoading ? null : handleSubmit,
                           child: Text(
-                            _submitLoading ? "Loading" : "Login",
+                            _submitLoading ? "Loading" : "Sign In",
                             style: TextStyle(color: Colors.white),
                           ),
                           style: ElevatedButton.styleFrom(

@@ -16,8 +16,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _passwordConfirmationController =
-      TextEditingController();
+  final TextEditingController _passwordConfirmationController = TextEditingController();
   final TextEditingController _fullnameController = TextEditingController();
   final TextEditingController _telNumController = TextEditingController();
 
@@ -45,6 +44,8 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void handleSubmit() async {
+    late String scaffoldMessage = "";
+
     setState(() {
       _submitLoading = true;
     });
@@ -54,19 +55,24 @@ class _RegisterPageState extends State<RegisterPage> {
     if (formKeyReg.currentState!.validate()) {
       formKeyReg.currentState!.save();
 
-      final newUser = Profile(
-          email: email, fullname: fullname, telNum: telNum, password: password);
-
-      var result = await widget.authService.signUp(newUser);
-
-      if (result != null) {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => LoginPage(authService: widget.authService,)));
+      try {
+        final newUser = Profile(email: email, fullname: fullname, telNum: telNum, password: password);
+        await widget.authService.signUp(newUser);
+        
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage(authService: widget.authService,)));
+      
+        scaffoldMessage = "Sign Up Success";
+      } catch (e) {
+        scaffoldMessage = "Sign Up Failed";
       }
 
-      scaffoldMessenger.showSnackBar(SnackBar(
-          content:
-              Text(result != null ? "Register Success" : "Register Failed")));
+      setState(() {
+        _submitLoading = false;
+      });
+    }
+
+    if(scaffoldMessage.isNotEmpty){
+      scaffoldMessenger.showSnackBar(SnackBar(content: Text(scaffoldMessage)));
     }
 
     setState(() {
@@ -94,7 +100,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Image.asset("assets/Mobile login-pana.png")),
               Container(
                 width: double.maxFinite,
-                child: Text("Register",
+                child: Text("Sign Up",
                     textAlign: TextAlign.left,
                     style: GoogleFonts.lato(
                       textStyle: TextStyle(
@@ -133,7 +139,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Email is required';
-                        } else {
+                        }  else if (!value.contains("@")) {
+                          return 'Invalid Email';
+                        }  else {
                           return null;
                         }
                       },
@@ -203,8 +211,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Telephone Number is required';
-                        } else if (!value.contains("@")) {
-                          return 'Invalid Email';
                         } else {
                           return null;
                         }
@@ -330,7 +336,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: ElevatedButton(
                           onPressed: _submitLoading ? null : handleSubmit,
                           child: Text(
-                            _submitLoading ? "Loading" : "Register",
+                            _submitLoading ? "Loading" : "Sign Up",
                             style: TextStyle(color: Colors.white),
                           ),
                           style: ElevatedButton.styleFrom(
