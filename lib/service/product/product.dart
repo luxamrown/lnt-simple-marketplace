@@ -21,6 +21,7 @@ class ProductService extends FirebaseService {
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getAllProduct([String category = ""]) {
     late Query<Map<String, dynamic>> products = firestoreInstance().collection(productCollectionConst);
+    
     if(category.isNotEmpty) {
       products = products.where("category", isEqualTo: category);
     }
@@ -28,17 +29,13 @@ class ProductService extends FirebaseService {
     return products.snapshots();
   }
 
-  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getDetailProduct(String id) async {
-    final selectedProduct = await firestoreInstance().collection(productCollectionConst).doc(id).snapshots();
-
-    if(await selectedProduct.isEmpty){
-      throw Exception("Product Not Found");
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getDetailProduct(String id) {
+    try {
+      return firestoreInstance().collection(productCollectionConst).doc(id).snapshots();
+    } catch (e) {
+      rethrow;
     }
-
-    return selectedProduct as Stream<QuerySnapshot<Map<String, dynamic>>>;
   }
-
-
 
   void deleteProduct(String id) {
     firestoreInstance().collection(productCollectionConst).doc(id).delete();

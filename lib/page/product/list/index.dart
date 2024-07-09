@@ -47,9 +47,8 @@ class _ListProductState extends State<ListProduct> {
         .getAllProduct(category != selectedCategory ? '' : category);
   }
 
-  void handleSelectProduct() {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => ProductPage().renderDetailProduct()));
+  void handleSelectProduct(String id) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductPage().renderDetailProduct(id)));
   }
 
   @override
@@ -147,13 +146,14 @@ class _ListProductState extends State<ListProduct> {
                         shrinkWrap: true,
                         itemCount: data!.docs.length,
                         itemBuilder: (context, index) {
-                          final product = data!.docs[index].data();
-                          final productID = product['id'];
+                          final product = data.docs[index].data();
+                          final productID = data.docs[index].id;
 
                           return ProductCard(
                               name: product['name'],
                               price: product['price'],
-                              onTap: handleSelectProduct);
+                              onTap: () => handleSelectProduct(productID)
+                              );
                         },
                       );
                     }

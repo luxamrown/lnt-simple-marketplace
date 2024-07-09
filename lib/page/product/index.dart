@@ -15,7 +15,7 @@ class ProductPage {
     return AddProductPage(productService: productService);
   }
 
-  Widget renderDetailProduct() {
-    return DetailProductPage(productService: productService);
+  Widget renderDetailProduct(String id) {
+    return DetailProductPage(productService: productService, productId: id,);
   }
 }
