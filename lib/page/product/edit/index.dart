@@ -85,7 +85,7 @@ class _EditProductPageState extends State<EditProductPage> {
                   child: Image.asset("assets/Create-rafiki.png")),
               Container(
                 width: double.maxFinite,
-                child: Text("Add Your Product!",
+                child: Text("Edit Your Product!",
                     textAlign: TextAlign.left,
                     style: GoogleFonts.lato(
                       textStyle: TextStyle(
