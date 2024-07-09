@@ -43,12 +43,17 @@ class _ListProductState extends State<ListProduct> {
       selectedCategory = category == selectedCategory ? '' : category;
     });
 
-    _productStream = widget.productService
-        .getAllProduct(category != selectedCategory ? '' : category);
+    _productStream = widget.productService.getAllProduct(category != selectedCategory ? '' : category);
   }
 
   void handleSelectProduct(String id) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductPage().renderDetailProduct(id)));
+  }
+
+  void handleSearchSubmit(String input) {
+    setState(() {
+      _productStream = widget.productService.getAllProduct(selectedCategory, input);
+    });
   }
 
   @override
@@ -66,10 +71,11 @@ class _ListProductState extends State<ListProduct> {
                 child: TextField(
                     style: TextStyle(
                         fontSize: 14,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w500,
                         color: Color(Colors.grey.shade700.value)),
                     controller: _keywordController,
-                    textInputAction: TextInputAction.go,
+                    textInputAction: TextInputAction.search,
+                    onSubmitted: handleSearchSubmit,
                     onChanged: (value) => {
                           setState(() {
                             keyword = value;

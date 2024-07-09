@@ -24,12 +24,18 @@ class ProductService extends FirebaseService {
     }
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getAllProduct([String category = ""]) {
+  Stream<QuerySnapshot<Map<String, dynamic>>> getAllProduct([String category = "", String keyword = ""]) {
     late Query<Map<String, dynamic>> products = firestoreInstance().collection(productCollectionConst);
     
+
     if(category.isNotEmpty) {
       products = products.where("category", isEqualTo: category);
     }
+
+    if(keyword.isNotEmpty){
+      products = products.where('name', isGreaterThanOrEqualTo: keyword).where('name', isLessThanOrEqualTo: "${keyword}${'\uf8ff'}");
+    }
+
     
     return products.snapshots();
   }
