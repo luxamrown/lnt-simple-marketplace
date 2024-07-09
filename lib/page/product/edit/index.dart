@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,20 +7,21 @@ import 'package:lnt_simple_marketplace/model/product.dart';
 import 'package:lnt_simple_marketplace/page/index.dart';
 import 'package:lnt_simple_marketplace/service/product/product.dart';
 
-class AddProductPage extends StatefulWidget {
+class EditProductPage extends StatefulWidget {
   final ProductService productService;
+  final Product productDetail;
   
-  const AddProductPage({Key? key, required this.productService}) : super(key: key);
+  const EditProductPage({Key? key, required this.productService, required this.productDetail}) : super(key: key);
 
   @override
-  State<AddProductPage> createState() => _AddProductPageState();
+  State<EditProductPage> createState() => _EditProductPageState();
 }
 
-class _AddProductPageState extends State<AddProductPage> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _descController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _quantityController = TextEditingController();
+class _EditProductPageState extends State<EditProductPage> {
+  late TextEditingController _nameController = TextEditingController();
+  late TextEditingController _descController = TextEditingController();
+  late TextEditingController _priceController = TextEditingController();
+  late TextEditingController _quantityController = TextEditingController();
 
   String dropdownValue = MasterCategories.first['label']!;
 
@@ -32,35 +34,44 @@ class _AddProductPageState extends State<AddProductPage> {
   String quantity = '';
   String price = '';
 
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.productDetail.name);
+    _descController = TextEditingController(text: widget.productDetail.desc);
+    _priceController = TextEditingController(text: widget.productDetail.price.toString());
+    _quantityController = TextEditingController(text: widget.productDetail.quantity.toString());
+  }
+
   void handleSubmit() async {
     setState(() {
       _submitLoading = true;
     });
     final scaffoldMessenger = ScaffoldMessenger.of(context);
+    late String scaffoldMessage = "";
 
     if (formKeyReg.currentState!.validate()) {
       formKeyReg.currentState!.save();
 
-      final newProduct = Product(name: name, desc: desc, quantity: int.parse(quantity), price: int.parse(price), category: dropdownValue);
+      final newProduct = Product(id: widget.productDetail.id, name: name, desc: desc, quantity: int.parse(quantity), price: int.parse(price), category: dropdownValue);
+      try {
+        await widget.productService.updateProduct(newProduct);
 
-      var result = await widget.productService.addProduct(newProduct);
-
-      if (result != null) {
+        scaffoldMessage = "Update Product Success";
+        
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => IndexPage()));
+      } catch (e) {
+        scaffoldMessage = "Update Product Failed";
+        
       }
-
-      scaffoldMessenger.showSnackBar(SnackBar(
-          content: Text(result != null ? "Add Product Success" : "Add Product Failed")));
+      
+      scaffoldMessenger.showSnackBar(SnackBar(content: Text(scaffoldMessage)));
     }
 
     setState(() {
       _submitLoading = false;
     });
   }
-
-  // handleTapRegister(BuildContext context) {
-  //   // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AuthPage().renderRegister()));
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -291,7 +302,7 @@ class _AddProductPageState extends State<AddProductPage> {
                     Center(
                         child: SizedBox(
                       child: DropdownMenu<String>(
-                        initialSelection: MasterCategories.first['label'],
+                        initialSelection: widget.productDetail.category,
                         onSelected: (String? value) {
                           setState(() {
                             dropdownValue = value!;

@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lnt_simple_marketplace/model/product.dart';
 import 'package:lnt_simple_marketplace/page/index.dart';
-import 'package:lnt_simple_marketplace/service/auth/auth.dart';
+import 'package:lnt_simple_marketplace/page/product/index.dart';
 import 'package:lnt_simple_marketplace/service/product/product.dart';
 
 class DetailProductPage extends StatefulWidget {
@@ -43,17 +44,20 @@ class _DetailProductPageState extends State<DetailProductPage> {
     }
   }
 
+  void handleEdit(Product product) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductPage().renderEditProduct(product)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+      ),
       body: SingleChildScrollView(
           child: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
-            SizedBox(
-              height: 40,
-            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -100,7 +104,10 @@ class _DetailProductPageState extends State<DetailProductPage> {
                               width: double.maxFinite,
                               height: 50,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  final currentData = Product(id: widget.productId, name: data['name'], desc: data['desc'], price: data['price'],quantity: data['quantity'], category: data['category']);
+                                  handleEdit(currentData);
+                                },
                                 child: Text(
                                   "Edit Product",
                                   style: TextStyle(color: Colors.grey.shade900),

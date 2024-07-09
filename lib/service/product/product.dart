@@ -15,8 +15,13 @@ class ProductService extends FirebaseService {
     }
   }
 
-  Future<void> updateProduct(Product productData) {
-    return firestoreInstance().collection(productCollectionConst).doc(productData.id).update(productData.toMap());
+  Future updateProduct(Product productData) async {
+    try {
+      print(productData.toMap());
+      await firestoreInstance().collection(productCollectionConst).doc(productData.id).update(productData.toMap());
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getAllProduct([String category = ""]) {
