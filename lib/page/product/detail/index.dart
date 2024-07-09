@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lnt_simple_marketplace/page/index.dart';
 import 'package:lnt_simple_marketplace/service/auth/auth.dart';
 import 'package:lnt_simple_marketplace/service/product/product.dart';
 
@@ -17,13 +18,29 @@ class DetailProductPage extends StatefulWidget {
 }
 
 class _DetailProductPageState extends State<DetailProductPage> {
-  late Stream<DocumentSnapshot<Map<String, dynamic>>> _productDetailStream;
+  late Stream<DocumentSnapshot<Map<String, dynamic>>>? _productDetailStream;
 
   @override
   void initState() {
     super.initState();
     _productDetailStream =
         widget.productService.getDetailProduct(widget.productId);
+  }
+
+  void handleDelete() {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    try {
+      widget.productService.deleteProduct(widget.productId);
+
+      setState(() {
+        _productDetailStream = null;
+      });
+      
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => IndexPage()));
+    } catch (e) {
+      scaffoldMessenger.showSnackBar(SnackBar(content: Text("Delete Product Failed")));
+    }
   }
 
   @override
@@ -75,6 +92,36 @@ class _DetailProductPageState extends State<DetailProductPage> {
                                     fontSize: 18,
                                     fontWeight: FontWeight.normal,
                                     color: Color(Colors.grey.shade500.value)),
+                              )),
+                          SizedBox(
+                            height: 40,
+                          ),
+                          Container(
+                              width: double.maxFinite,
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                child: Text(
+                                  "Edit Product",
+                                  style: TextStyle(color: Colors.grey.shade900),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.grey.shade300, shadowColor: Colors.transparent),
+                              )),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                              width: double.maxFinite,
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed: handleDelete,
+                                child: Text(
+                                  "Delete Product",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red),
                               )),
                         ],
                       );

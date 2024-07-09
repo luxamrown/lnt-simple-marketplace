@@ -37,7 +37,11 @@ class ProductService extends FirebaseService {
     }
   }
 
-  void deleteProduct(String id) {
-    firestoreInstance().collection(productCollectionConst).doc(id).delete();
+  Future deleteProduct(String id) async {
+    try {
+      await firestoreInstance().collection(productCollectionConst).doc(id).delete();
+    } catch (e) {
+      rethrow;
+    }
   }
 }

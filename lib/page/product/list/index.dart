@@ -131,7 +131,7 @@ class _ListProductState extends State<ListProduct> {
                     } else if (snapshot.hasError) {
                       return Text("Error: ${snapshot.error}");
                     } else if (snapshot.data!.size <= 0) {
-                      return Text("Produk tidak ditemukan",
+                      return Text("Product not Found",
                           textAlign: TextAlign.left,
                           style: GoogleFonts.lato(
                             textStyle: TextStyle(

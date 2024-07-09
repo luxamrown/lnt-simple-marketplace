@@ -47,8 +47,7 @@ class _AddProductPageState extends State<AddProductPage> {
       var result = await widget.productService.addProduct(newProduct);
 
       if (result != null) {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) => IndexPage()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => IndexPage()));
       }
 
       scaffoldMessenger.showSnackBar(SnackBar(
