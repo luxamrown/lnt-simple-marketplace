@@ -45,6 +45,6 @@ Flutter project integration with Firebase
 <div align="left">
     <picture>
         <img alt="product" src="https://github.com/luxamrown/luxamrown/assets/63460549/381accd2-868f-40f8-99a6-ed6a1b189880" width="200" />
-    </picture>s
+    </picture>
 </div>
 
