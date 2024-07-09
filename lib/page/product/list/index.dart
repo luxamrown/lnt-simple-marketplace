@@ -20,18 +20,16 @@ class ListProduct extends StatefulWidget {
 
 class _ListProductState extends State<ListProduct> {
   final TextEditingController _keywordController = TextEditingController();
-  
+
   late Stream<QuerySnapshot<Map<String, dynamic>>> _productStream;
-  
+  String keyword = '';
+  String selectedCategory = "";
+
   @override
   void initState() {
     super.initState();
-      _productStream = widget.productService.getAllProduct();
-
+    _productStream = widget.productService.getAllProduct("");
   }
-
-  String keyword = '';
-  String selectedCategory = " ";
 
   void onClearKeyword() {
     _keywordController.clear();
@@ -44,17 +42,21 @@ class _ListProductState extends State<ListProduct> {
     setState(() {
       selectedCategory = category == selectedCategory ? '' : category;
     });
+
+    _productStream = widget.productService
+        .getAllProduct(category != selectedCategory ? '' : category);
   }
 
   void handleSelectProduct() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductPage().renderDetailProduct()));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ProductPage().renderDetailProduct()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
+        body: SingleChildScrollView(
+      child: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
@@ -114,7 +116,7 @@ class _ListProductState extends State<ListProduct> {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: MasterCategories.map((e) => CategoryCard(
-                      value: e!,
+                      value: e,
                       selected: e['code'] == selectedCategory ? true : false,
                       onTap: handleChangeCategory,
                     )).toList(),
@@ -125,10 +127,19 @@ class _ListProductState extends State<ListProduct> {
                 StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                   stream: _productStream,
                   builder: (context, snapshot) {
-                    if(snapshot.connectionState == ConnectionState.waiting) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
                       return CircularProgressIndicator();
-                    } else if (snapshot.hasError){
+                    } else if (snapshot.hasError) {
                       return Text("Error: ${snapshot.error}");
+                    } else if (snapshot.data!.size <= 0) {
+                      return Text("Produk tidak ditemukan",
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                                color: Color(Colors.grey.shade700.value)),
+                          ));
                     } else {
                       final data = snapshot.data;
 
@@ -139,23 +150,20 @@ class _ListProductState extends State<ListProduct> {
                           final product = data!.docs[index].data();
                           final productID = product['id'];
 
-                          return ProductCard(name: product['name'], price: product['price'], onTap: handleSelectProduct);
-
+                          return ProductCard(
+                              name: product['name'],
+                              price: product['price'],
+                              onTap: handleSelectProduct);
                         },
                       );
-
                     }
                   },
-                  
                 )
               ],
             )
-            
           ],
         ),
-        
       ),
-      ) 
-    );
+    ));
   }
 }

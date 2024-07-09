@@ -1,18 +1,18 @@
 List<Map<String, String>> MasterCategories = [{
   "label": "Food",
-  "code": "food"
+  "code": "Food"
 },{
   "label": "Fashion",
-  "code": "fashion"
+  "code": "Fashion"
 },{
   "label": "Electronics",
-  "code": "electronics"
+  "code": "Electronics"
 },{
   "label": "Furniture",
-  "code": "furniture"
+  "code": "Furniture"
 },{
   "label": "Sports",
-  "code": "sports"
+  "code": "Sports"
 }];
 
 final String FIELD_NAME = 'name';
