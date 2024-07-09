@@ -36,14 +36,6 @@ Flutter project integration with Firebase
 </div>
 <div align="left">
     <picture>
-        <img alt="product" src="https://github.com/luxamrown/luxamrown/assets/63460549/c464b206-d319-4cf8-aa8f-4011d5d9d45e" width="200" />
-    </picture>
-    <picture>
-        <img alt="product" src="https://github.com/luxamrown/luxamrown/assets/63460549/8fd660d2-e6bd-41c4-88b7-fa94a3d46d85" width="200" />
-    </picture>
-</div>
-<div align="left">
-    <picture>
         <img alt="product" src="https://github.com/luxamrown/luxamrown/assets/63460549/381accd2-868f-40f8-99a6-ed6a1b189880" width="200" />
     </picture>
 </div>
