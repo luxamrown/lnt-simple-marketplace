@@ -31,7 +31,7 @@ class _ListProductState extends State<ListProduct> {
   }
 
   String keyword = '';
-  String selectedCategory = "food";
+  String selectedCategory = " ";
 
   void onClearKeyword() {
     _keywordController.clear();

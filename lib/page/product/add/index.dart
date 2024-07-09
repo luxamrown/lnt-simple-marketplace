@@ -42,14 +42,13 @@ class _AddProductPageState extends State<AddProductPage> {
     if (formKeyReg.currentState!.validate()) {
       formKeyReg.currentState!.save();
 
-      final newProduct = Product(
-          name: name, desc: desc, quantity: int.parse(quantity), price: int.parse(price), category: dropdownValue);
+      final newProduct = Product(name: name, desc: desc, quantity: int.parse(quantity), price: int.parse(price), category: dropdownValue);
 
       var result = await widget.productService.addProduct(newProduct);
 
       if (result != null) {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => IndexPage()));
+            .pushReplacement(MaterialPageRoute(builder: (context) => IndexPage()));
       }
 
       scaffoldMessenger.showSnackBar(SnackBar(
@@ -61,9 +60,9 @@ class _AddProductPageState extends State<AddProductPage> {
     });
   }
 
-  handleTapRegister(BuildContext context) {
-    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AuthPage().renderRegister()));
-  }
+  // handleTapRegister(BuildContext context) {
+  //   // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AuthPage().renderRegister()));
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -39,17 +39,23 @@ class AuthService extends FirebaseService {
     }
   }
 
-  Future<User> getCurrentUser() async {
-      final User user = await fireBaseAuthInstance().currentUser!;
+  Future<Stream<DocumentSnapshot<Map<String, dynamic>>>> getCurrentUser() async {
+    final User user = await fireBaseAuthInstance().currentUser!;
+    
+    try {
+      return await firestoreInstance().collection(userCollectionConst).doc(user.uid).snapshots();
 
-      return user;
+    } catch (e) {
+      rethrow;
+    }
+
   }
 
   Future<void> signOut() async {
      try {
-       await fireBaseAuthInstance().signOut();
+      await fireBaseAuthInstance().signOut();
      } catch (e) {
-       throw Exception("Sign Out Failed");
+      rethrow;
      }
   }
 }
